@@ -432,5 +432,182 @@ const articles = [
             </ul>
             <p>Convierte tu viejo móvil en una biblioteca de Alejandría indestructible.</p>
         `
+    },
+
+    // --- NUEVAS EMERGENCIAS ---
+    {
+        id: 'fire_evacuation',
+        category: 'emergencia',
+        icon: 'fa-fire',
+        title: 'Incendio en Edificio',
+        summary: 'Cómo escapar de un incendio urbano y evitar la asfixia por humo.',
+        content: `
+            <h3>El Humo Mata Antes que el Fuego</h3>
+            <p>El 80% de las muertes en incendios son por inhalación de humo tóxico, no por quemaduras. El humo caliente quema tus pulmones y te deja inconsciente en minutos.</p>
+           
+            <h3>Reglas de Oro</h3>
+            <ol>
+                <li><strong>Gatea SIEMPRE:</strong> El humo sube. El aire respirable está en los últimos 60cm del suelo. Gatea con la cara pegada al suelo.</li>
+                <li><strong>Toca las puertas:</strong> Antes de abrir una puerta, toca el pomo con el dorso de la mano. Si está caliente, el fuego está al otro lado. NO ABRAS. Busca otra salida.</li>
+                <li><strong>Cierra puertas:</strong> Cada puerta cerrada a tu espalda ralentiza el fuego y el humo. Cierra pero no eches llave (los bomberos necesitan acceso).</li>
+                <li><strong>Nunca ascensor:</strong> El hueco del ascensor es una chimenea que aspira el fuego hacia arriba. Quedas atrapado si se corta la luz.</li>
+            </ol>
+
+            <h3>Si estás atrapado en una habitación</h3>
+            <p>Sella la puerta con trapos húmedos por debajo. Abre la ventana solo un poco (el oxígeno aviva el fuego). Señaliza con una sábana blanca o llamativa. NO saltes si estás por encima del 2º piso (caída letal).</p>
+
+            <div class="warning-box">
+                <strong>Ropa en llamas:</strong> Si te prende la ropa, NO CORRAS (avivarás el fuego). Tírate al suelo y RUEDA sobre ti mismo hasta apagar las llamas. Tapa tu cara con las manos.
+            </div>
+        `
+    },
+    {
+        id: 'flood_escape',
+        category: 'emergencia',
+        icon: 'fa-house-flood-water',
+        title: 'Inundación Repentina',
+        summary: 'Evacuación en DANAs y crecidas del Manzanares.',
+        content: `
+            <h3>La Velocidad del Agua</h3>
+            <p>Solo 15cm de agua en movimiento pueden derribarte. 60cm pueden arrastrar un coche. No subestimes las inundaciones.</p>
+           
+            <h3>Regla: Arriba y Afuera</h3>
+            <ol>
+                <li><strong>Sube, no bajes:</strong> Ve al piso más alto del edificio. Los sótanos y garajes son trampas mortales.</li>
+                <li><strong>Corta la electricidad:</strong> Si tienes tiempo, baja el interruptor general. El agua conduce la electricidad y puede electrocutarte.</li>
+                <li><strong>No cruces corrientes:</strong> Nunca intentes caminar o conducir por agua en movimiento. Busca terreno alto y espera rescate.</li>
+            </ol>
+
+            <h3>Señales de Alarma</h3>
+            <ul>
+                <li>Agua turbia subiendo rápido en la calle</li>
+                <li>Sonido de agua corriendo en tuberías o paredes</li>
+                <li>Olor a gas (las tuberías rotas son comunes en inundaciones)</li>
+            </ul>
+
+            <h3>Zonas de Riesgo en Madrid</h3>
+            <p><strong>Casa de Campo, Madrid Río, Arganzuela y riberas del Manzanares:</strong> Estas zonas pueden inundarse rápidamente en tormentas severas o rotura de presas. Si vives aquí, ten una bolsa de evacuación lista.</p>
+        `
+    },
+    {
+        id: 'hypothermia',
+        category: 'salud',
+        icon: 'fa-temperature-low',
+        title: 'Hipotermia y Congelación',
+        summary: 'Tratamiento de frío extremo sin calefacción en invierno.',
+        content: `
+            <h3>El Frío Silencioso</h3>
+            <p>La hipotermia ocurre cuando tu temperatura corporal baja de 35°C. Te mata lentamente, y lo peor es que te hace sentir confundido y somnoliento justo cuando necesitas actuar.</p>
+           
+            <h3>Señales de Hipotermia</h3>
+            <ul>
+                <li><strong>Leve:</strong> Temblor incontrolable, confusión, torpeza con las manos.</li>
+                <li><strong>Moderada:</strong> Deja de temblar (¡MAL SIGNO!), habla arrastrando palabras, movimientos lentos.</li>
+                <li><strong>Grave:</strong> Piel azulada, pulso débil, pérdida de consciencia. EMERGENCIA CRÍTICA.</li>
+            </ul>
+
+            <h3>Tratamiento Inmediato</h3>
+            <ol>
+                <li><strong>Quitar ropa mojada:</strong> La ropa húmeda aumenta la pérdida de calor x25. Cámbiala por ropa seca inmediatamente.</li>
+                <li><strong>Aislar del suelo:</strong> Túmbalo sobre mantas o cartones. El suelo frío roba calor.</li>
+                <li><strong>Calentar gradualmente:</strong> Usa tu propio cuerpo (piel con piel bajo mantas), NO agua caliente directa ni alcohol (ambos empeoran el shock).</li>
+                <li><strong>Bebida caliente y dulce:</strong> Si está consciente, dale té caliente con azúcar. Nunca alcohol.</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>NO frotes las extremidades congeladas:</strong> Esto rompe los cristales de hielo en los tejidos y causa más daño. Calienta suavemente con agua tibia (37°C), nunca caliente.
+            </div>
+        `
+    },
+    {
+        id: 'gunshot_trauma',
+        category: 'salud',
+        icon: 'fa-burst',
+        title: 'Heridas Balísticas y Metralla',
+        summary: 'Tratamiento de heridas de bala y explosiones.',
+        content: `
+            <h3>Seconds Matter</h3>
+            <p>Una herida arterial te mata en 3-5 minutos por desangrado. Debes actuar AHORA.</p>
+           
+            <h3>Protocolo MARCH</h3>
+            <ol>
+                <li><strong>M - Massive Bleeding (Hemorragia Masiva):</strong> Si hay sangre a chorro, pon torniquete en la extremidad, alto y apretado. Usa cinturón, cuerda o tela retorcida. Aprieta hasta que pare de sangrar. Anota la hora.</li>
+                <li><strong>A - Airway (Vía Aérea):</strong> Si está inconsciente, ponlo de lado para que no se ahogue con la lengua o sangre.</li>
+                <li><strong>R - Respiration (Respiración):</strong> Busca heridas en pecho. Si hay un agujero que silba, tápalo con plástico y cinta (3 lados sellados, 1 lado abierto = válvula de escape).</li>
+                <li><strong>C - Circulation (Circulación):</strong> Presión directa en otras heridas sangrantes con trapo limpio.</li>
+                <li><strong>H - Hypothermia (Hipotermia):</strong> Cúbrelo con mantas. Las víctimas de trauma pierden calor rápidamente.</li>
+            </ol>
+
+            <h3>Metralla y Fragmentos</h3>
+            <p><strong>NO SAQUES objetos clavados grandes</strong> (cuchillos, varillas, cristales grandes). Actúan como tapón y al sacarlos puede haber hemorragia incontrolable. Estabilízalos con vendas y busca ayuda médica.</p>
+
+            <div class="info-box">
+                <strong>Empaquetado de heridas (Wound Packing):</strong> Si la herida está en zona no torníquete (cuello, ingle, abdomen), mete gasa o trapo limpio DENTRO de la herida y presiona fuerte durante 3 minutos sin soltar. Es brutal pero funciona.
+            </div>
+        `
+    },
+    {
+        id: 'kidnapping_survival',
+        category: 'emergencia',
+        icon: 'fa-handcuffs',
+        title: 'Supervivencia a Secuestro',
+        summary: 'Protocolo SERE: Sobrevivir, Evadir, Resistir, Escapar.',
+        content: `
+            <h3>Las Primeras 24 Horas</h3>
+            <p>Las estadísticas muestran que si sobrevives las primeras 24h, tus probabilidades de salir con vida aumentan exponencialmente. Tu objetivo inmediato es NO MORIR.</p>
+           
+            <h3>Protocolo SERE</h3>
+            <ul>
+                <li><strong>S - Survive (Sobrevivir):</strong> Cumple las órdenes iniciales. No pelees si están armados. Memoriza caras, voces, rutas.</li>
+                <li><strong>E - Evade (Evadir):</strong> Si hay una oportunidad clara de escape en los primeros segundos (puerta abierta, distracción), corre en zigzag y no mires atrás. Después de 5 minutos, escapar es mucho más difícil.</li>
+                <li><strong>R - Resist (Resistir):</strong> No des información voluntaria. Controla tu miedo. Respira profundo. Humanízate (habla de tu familia, di tu nombre). Es más difícil matar a alguien "real".</li>
+                <li><strong>E - Escape (Escapar):</strong> Observa todo. Rutinas de los captores, cerraduras, ventanas, horarios de silencio. No escapes impulsivamente; planifica.</li>
+            </ul>
+
+            <h3>Durante el Cautiverio</h3>
+            <ol>
+                <li><strong>Rutina Mental:</strong> Cuenta, recita poemas, haz ejercicio mental. La mente ociosa colapsa en pánico.</li>
+                <li><strong>Contacto Visual Moderado:</strong> Ni desafiante ni sumiso total. Mínimo necesario para parecer cooperativo.</li>
+                <li><strong>Come y Bebe:</strong> Aunque tengas miedo, come lo que te den. Necesitas energía para pensar y escapar.</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>¡RAID/RESCATE!</strong> Si escuchas explosiones o gritos de "¡POLICÍA!", tírate al suelo INMEDIATAMENTE, manos en la nuca, NO TE MUEVAS. Los rescatadores no saben quién eres en el caos. Moverte te hace un objetivo.
+            </div>
+        `
+    },
+    {
+        id: 'emp_protocol',
+        category: 'emergencia',
+        icon: 'fa-bolt-lightning',
+        title: 'Ataque EMP / Apagón Total',
+        summary: 'Qué hacer si cae toda la red eléctrica y electrónica.',
+        content: `
+            <h3>Diferencia entre Apagón y EMP</h3>
+            <p>Un <strong>apagón</strong> corta la electricidad pero los aparatos funcionan cuando vuelve la luz. Un <strong>Pulso Electromagnético (EMP)</strong> fríe todos los circuitos electrónicos en cientos de kilómetros. Coches, móviles, hospitales, TODO muerto instantáneamente.</p>
+           
+            <h3>Primeros 60 Minutos (Caos Inicial)</h3>
+            <ol>
+                <li><strong>No entres en pánico:</strong> La mayoría no sabrá qué pasó. Tú sí. Eso te da ventaja.</li>
+                <li><strong>Vuelve a casa AHORA:</strong> Las calles colapsarán en horas. Camina rápido pero no corras (llamas la atención). Evita multitudes y grandes avenidas.</li>
+                <li><strong>Agua inmediata:</strong> Llena TODAS las bañeras, cubos, botellas. Las bombas de agua fallarán en horas.</li>
+                <li><strong>Efectivo y Trueque:</strong> Los cajeros no funcionan. El dinero digital desaparece. Solo efectivo, pero perderá valor en días.</li>
+            </ol>
+
+            <h3>Primeros 7 Días (Supervivencia Urbana)</h3>
+            <ul>
+                <li><strong>Radio de Onda Corta / FM antigua:</strong> Los receptores pasivos sin chips complejos pueden sobrevivir. Necesitas información.</li>
+                <li><strong>Red de Vecinos:</strong> Forma un grupo de confianza en tu escalera/edificio. Compartir seguridad y recursos.</li>
+                <li><strong>LOW PROFILE:</strong> No muestres que tienes comida, agua o luz. Disciplina de luz total (mantas en ventanas).</li>
+                <li><strong>Defensa Pasiva:</strong> Refuerza tu puerta. No abras a desconocidos. Contraseña familiar para identificarse.</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Jaula de Faraday:</strong> Una caja metálica sellada (lata de galletas, microondas viejo) bloquea EMPs. Guarda ahí: radio de emergencia, powerbank, memorias USB, pilas. Es tu backup tecnológico.
+            </div>
+
+            <h3>Ciudad vs Campo</h3>
+            <p>Madrid se volverá inhabitable en 2-4 semanas sin electricidad (agua, alimentos). Si puedes, evacúa hacia zonas rurales con pozos y huertos. Pero hacerlo requiere PLANIFICACIÓN previa, no improvisación.</p>
+        `
     }
 ];
