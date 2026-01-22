@@ -50,23 +50,7 @@
             border-radius: 4px;
         }
 
-        /* SOS Flash */
-        @keyframes sos-flash {
-
-            0%,
-            49% {
-                background-color: #000;
-            }
-
-            50%,
-            100% {
-                background-color: #fff;
-            }
-        }
-
-        .flashing {
-            animation: sos-flash 0.5s infinite;
-        }
+        /* SOS Flash - Removed CSS animation, using JS for Morse timing */
 
         /* Compass */
         .compass-dial {
@@ -130,9 +114,12 @@
                         <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">Local Storage</span>
                     </div>
                     <p class="text-xs text-slate-400 mb-3">
-                        Esto simula un chat local. Para comunicación real P2P sin internet, usa apps como
-                        <strong>Briar</strong> o <strong>Bridgefy</strong>. Los mensajes aquí solo se guardan en este
-                        dispositivo.
+                        <strong>Mensajería sin Internet:</strong> Esto simula un chat local (solo este dispositivo).
+                        Para comunicación
+                        real P2P sin datos móviles, usa apps como <strong>Briar</strong> (Bluetooth/WiFi Direct),
+                        <strong>Bridgefy</strong> (mesh Bluetooth), o <strong>Nearby Share</strong>. También puedes
+                        explorar
+                        <strong>Web Bluetooth API</strong> para crear chat P2P en navegador (experimental).
                     </p>
                     <div id="chat-history"
                         class="bg-slate-900 border border-slate-700 rounded-lg h-40 overflow-y-auto p-3 mb-3 text-sm space-y-2">
@@ -252,19 +239,74 @@
             }
         }
 
-        // --- TOOLS: SOS FLASHER ---
-        let sosInterval;
+        // --- TOOLS: SOS FLASHER (MORSE CODE PATTERN) ---
+        let sosTimeout = null;
+        let sosActive = false;
         const sosOverlay = document.getElementById('sos-overlay');
+
         function toggleSOS() {
-            if (sosOverlay.classList.contains('hidden')) {
-                // START
+            if (!sosActive) {
+                // START SOS
+                sosActive = true;
                 sosOverlay.classList.remove('hidden');
-                sosOverlay.classList.add('flashing');
+                document.getElementById('sos-btn').innerHTML = '<i class="fa-solid fa-stop mr-2"></i> DETENER';
+                runMorseSOSPattern();
             } else {
-                // STOP
+                // STOP SOS
+                sosActive = false;
                 sosOverlay.classList.add('hidden');
-                sosOverlay.classList.remove('flashing');
+                document.getElementById('sos-btn').innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i> ACTIVAR PARPADEO';
+                if (sosTimeout) clearTimeout(sosTimeout);
+                sosOverlay.style.backgroundColor = '#000';
             }
+        }
+
+        function runMorseSOSPattern() {
+            if (!sosActive) return;
+
+            // Morse timing (in milliseconds):
+            // Short (dot): 200ms ON
+            // Long (dash): 600ms ON
+            // Gap between signals: 200ms OFF
+            // Gap between letters: 600ms OFF (already covered by signal gap)
+            // Gap between words (SOS repetition): 2000ms OFF
+
+            const short = 200;  // Dot duration
+            const long = 600;   // Dash duration
+            const gap = 200;    // Gap between signals
+            const letterGap = 600; // Gap between S-O-S
+            const wordGap = 2000; // Gap before repeating SOS
+
+            let timeline = 0;
+
+            // S (3 short: dot-dot-dot)
+            flash(timeline, short); timeline += short + gap;
+            flash(timeline, short); timeline += short + gap;
+            flash(timeline, short); timeline += short + letterGap;
+
+            // O (3 long: dash-dash-dash)
+            flash(timeline, long); timeline += long + gap;
+            flash(timeline, long); timeline += long + gap;
+            flash(timeline, long); timeline += long + letterGap;
+
+            // S (3 short: dot-dot-dot)
+            flash(timeline, short); timeline += short + gap;
+            flash(timeline, short); timeline += short + gap;
+            flash(timeline, short); timeline += short + wordGap;
+
+            // Repeat the entire SOS pattern
+            sosTimeout = setTimeout(() => runMorseSOSPattern(), timeline);
+        }
+
+        function flash(delay, duration) {
+            setTimeout(() => {
+                if (!sosActive) return;
+                sosOverlay.style.backgroundColor = '#fff'; // Flash ON
+                setTimeout(() => {
+                    if (!sosActive) return;
+                    sosOverlay.style.backgroundColor = '#000'; // Flash OFF
+                }, duration);
+            }, delay);
         }
 
         // --- TOOLS: COMPASS ---
