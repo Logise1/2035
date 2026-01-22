@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MADRID 2035: Kit Digital</title>
+    <meta name="description" content="Herramientas y Juegos Offline.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+
+    <style>
+        :root {
+            --bg-app: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --accent: #8b5cf6;
+            /* Violet */
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .tab-btn.active {
+            border-bottom: 2px solid var(--accent);
+            color: white;
+        }
+
+        /* Game Canvas specific */
+        canvas {
+            background: #000;
+            display: block;
+            margin: 0 auto;
+            border: 2px solid #334155;
+            border-radius: 4px;
+        }
+
+        /* SOS Flash */
+        @keyframes sos-flash {
+
+            0%,
+            49% {
+                background-color: #000;
+            }
+
+            50%,
+            100% {
+                background-color: #fff;
+            }
+        }
+
+        .flashing {
+            animation: sos-flash 0.5s infinite;
+        }
+
+        /* Compass */
+        .compass-dial {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden bg-slate-900">
+
+    <!-- HEADER -->
+    <header class="bg-slate-900 border-b border-slate-800 p-4 shrink-0 shadow-md">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="flex items-center text-slate-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Volver al Manual
+            </a>
+            <h1 class="font-bold text-lg text-white"><i class="fa-solid fa-toolbox text-violet-500 mr-2"></i>Kit Digital
+            </h1>
+        </div>
+    </header>
+
+    <!-- TABS -->
+    <div class="bg-slate-900/95 border-b border-slate-800 shrink-0 z-10">
+        <div class="max-w-4xl mx-auto flex">
+            <button onclick="switchTab('tools')" id="tab-tools"
+                class="tab-btn active flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors text-center">
+                🛠️ Herramientas
+            </button>
+            <button onclick="switchTab('games')" id="tab-games"
+                class="tab-btn flex-1 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors text-center">
+                🎮 Juegos (Offline)
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="flex-grow overflow-y-auto bg-slate-950 p-4" id="main-scroll">
+        <div class="max-w-4xl mx-auto min-h-full">
+
+            <!-- SECTION: TOOLS -->
+            <div id="section-tools" class="space-y-6 animate-fade-in">
+
+                <!-- SOS FLASHER -->
+                <div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-white"><i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i>Señal
+                            SOS Visual</h3>
+                        <span class="text-xs text-slate-500">Usa la pantalla como baliza</span>
+                    </div>
+                    <button id="sos-btn" onclick="toggleSOS()"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-lg transition-colors shadow-lg flex items-center justify-center">
+                        <i class="fa-solid fa-triangle-exclamation mr-2"></i> ACTIVAR PARPADEO
+                    </button>
+                </div>
+
+                <!-- OFF-GRID CHAT UI -->
+                <div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-white"><i
+                                class="fa-solid fa-walkie-talkie text-green-500 mr-2"></i>Notas de Campo (Simulado)</h3>
+                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">Local Storage</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-3">
+                        Esto simula un chat local. Para comunicación real P2P sin internet, usa apps como
+                        <strong>Briar</strong> o <strong>Bridgefy</strong>. Los mensajes aquí solo se guardan en este
+                        dispositivo.
+                    </p>
+                    <div id="chat-history"
+                        class="bg-slate-900 border border-slate-700 rounded-lg h-40 overflow-y-auto p-3 mb-3 text-sm space-y-2">
+                        <div class="text-slate-500 italic text-center text-xs mt-2">No hay registros de misión.</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="chat-input" placeholder="Escribir nota opertativa..."
+                            class="flex-grow bg-slate-700 border-none text-white rounded px-3 py-2 text-sm focus:ring-2 focus:ring-violet-500">
+                        <button onclick="sendMsg()"
+                            class="bg-violet-600 hover:bg-violet-700 text-white px-4 rounded text-sm"><i
+                                class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+
+                <!-- COMPASS -->
+                <div class="bg-slate-800 rounded-xl p-5 border border-slate-700 flex flex-col items-center text-center">
+                    <h3 class="font-bold text-white mb-2"><i class="fa-solid fa-compass text-blue-400 mr-2"></i>Brújula
+                        Digital</h3>
+                    <div
+                        class="relative w-32 h-32 my-4 border-4 border-slate-600 rounded-full flex items-center justify-center bg-slate-900 shadow-inner">
+                        <div id="compass-arrow"
+                            class="absolute w-full h-full flex items-center justify-center transition-transform duration-500">
+                            <i class="fa-solid fa-location-arrow text-4xl text-red-500 transform -rotate-45"
+                                style="filter: drop-shadow(0 0 5px red);"></i>
+                        </div>
+                        <div class="absolute top-1 text-slate-500 text-xs font-bold">N</div>
+                        <div class="absolute bottom-1 text-slate-500 text-xs font-bold">S</div>
+                        <div class="absolute left-2 text-slate-500 text-xs font-bold">O</div>
+                        <div class="absolute right-2 text-slate-500 text-xs font-bold">E</div>
+                    </div>
+                    <p id="compass-text" class="text-sm text-slate-400">Norte: --°</p>
+                    <p class="text-xs text-slate-600 mt-2">Requiere dispositivo móvil con giroscopio.</p>
+                </div>
+
+            </div>
+
+            <!-- SECTION: GAMES -->
+            <div id="section-games" class="hidden space-y-6 animate-fade-in">
+
+                <!-- GAME SELECTOR -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <button onclick="loadGame('snake')"
+                        class="bg-slate-800 p-4 rounded-xl border border-slate-700 hover:border-violet-500 transition-all text-center">
+                        <i class="fa-solid fa-staff-snake text-2xl text-emerald-400 mb-2"></i>
+                        <div class="font-bold text-sm">Viborita</div>
+                    </button>
+                    <button onclick="loadGame('memory')"
+                        class="bg-slate-800 p-4 rounded-xl border border-slate-700 hover:border-violet-500 transition-all text-center">
+                        <i class="fa-solid fa-brain text-2xl text-pink-400 mb-2"></i>
+                        <div class="font-bold text-sm">Memoria</div>
+                    </button>
+                    <button onclick="loadGame('mines')"
+                        class="bg-slate-800 p-4 rounded-xl border border-slate-700 hover:border-violet-500 transition-all text-center">
+                        <i class="fa-solid fa-bomb text-2xl text-red-400 mb-2"></i>
+                        <div class="font-bold text-sm">Minas</div>
+                    </button>
+                    <button onclick="loadGame('clicker')"
+                        class="bg-slate-800 p-4 rounded-xl border border-slate-700 hover:border-violet-500 transition-all text-center">
+                        <i class="fa-solid fa-hand-pointer text-2xl text-sky-400 mb-2"></i>
+                        <div class="font-bold text-sm">Reflejos</div>
+                    </button>
+                </div>
+
+                <!-- GAME CONTAINER -->
+                <div id="game-container"
+                    class="bg-slate-800 rounded-xl p-4 border border-slate-700 min-h-[400px] flex flex-col items-center justify-center relative">
+                    <div id="game-placeholder" class="text-center text-slate-500">
+                        <i class="fa-solid fa-gamepad text-4xl mb-4 opacity-50"></i>
+                        <p>Selecciona un juego arriba</p>
+                    </div>
+
+                    <!-- DYNAMIC GAME CANVAS/UI -->
+                    <div id="active-game-area" class="w-full h-full hidden flex flex-col items-center">
+                        <div class="flex justify-between w-full mb-4 px-2">
+                            <span id="game-score" class="font-mono text-violet-400 font-bold">Score: 0</span>
+                            <button onclick="closeGame()"
+                                class="text-xs text-slate-400 hover:text-white">Cerrar</button>
+                        </div>
+                        <canvas id="gameCanvas" width="300" height="300" class="hidden"></canvas>
+                        <div id="gameGrid" class="hidden grid gap-1"></div>
+
+                        <!-- CONTROLS FOR MOBILE -->
+                        <div id="mobile-controls" class="hidden grid-cols-3 gap-2 mt-4 w-48">
+                            <div></div>
+                            <button class="bg-slate-700 p-3 rounded" onclick="handleInput('up')">⬆️</button>
+                            <div></div>
+                            <button class="bg-slate-700 p-3 rounded" onclick="handleInput('left')">⬅️</button>
+                            <button class="bg-slate-700 p-3 rounded" onclick="handleInput('down')">⬇️</button>
+                            <button class="bg-slate-700 p-3 rounded" onclick="handleInput('right')">➡️</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FULLSCREEN SOS OVERLAY -->
+    <div id="sos-overlay" class="hidden fixed inset-0 z-50 bg-black flex items-center justify-center cursor-pointer"
+        onclick="toggleSOS()">
+        <div class="text-black font-bold text-4xl select-none">SOS</div>
+    </div>
+
+    <script>
+        // --- TABS LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            if (tab === 'tools') {
+                document.getElementById('section-tools').classList.remove('hidden');
+                document.getElementById('section-games').classList.add('hidden');
+            } else {
+                document.getElementById('section-tools').classList.add('hidden');
+                document.getElementById('section-games').classList.remove('hidden');
+            }
+        }
+
+        // --- TOOLS: SOS FLASHER ---
+        let sosInterval;
+        const sosOverlay = document.getElementById('sos-overlay');
+        function toggleSOS() {
+            if (sosOverlay.classList.contains('hidden')) {
+                // START
+                sosOverlay.classList.remove('hidden');
+                sosOverlay.classList.add('flashing');
+            } else {
+                // STOP
+                sosOverlay.classList.add('hidden');
+                sosOverlay.classList.remove('flashing');
+            }
+        }
+
+        // --- TOOLS: COMPASS ---
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', function (event) {
+                let alpha = event.alpha; // Rotation around z-axis
+                if (alpha) {
+                    document.getElementById('compass-arrow').style.transform = `rotate(${alpha}deg)`;
+                    document.getElementById('compass-text').innerText = `Norte: ${Math.round(alpha)}°`; // Simplificación
+                }
+            }, true);
+        }
+
+        // --- TOOLS: CHAT SIMULADO (LOCAL STORAGE) ---
+        const chatHistory = document.getElementById('chat-history');
+        const chatInput = document.getElementById('chat-input');
+
+        function loadChat() {
+            const msgs = JSON.parse(localStorage.getItem('madrid2035_chat') || '[]');
+            if (msgs.length > 0) chatHistory.innerHTML = '';
+            msgs.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'bg-slate-800 p-2 rounded text-xs border border-slate-700';
+                div.innerHTML = `<span class="text-violet-400 font-bold">[YO]</span> <span class="text-slate-300">${msg.text}</span> <div class="text-[10px] text-slate-500 text-right">${msg.time}</div>`;
+                chatHistory.appendChild(div);
+            });
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function sendMsg() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            const msgs = JSON.parse(localStorage.getItem('madrid2035_chat') || '[]');
+            const newMsg = { text, time: new Date().toLocaleTimeString() };
+            msgs.push(newMsg);
+            localStorage.setItem('madrid2035_chat', JSON.stringify(msgs));
+
+            chatInput.value = '';
+            loadChat();
+        }
+        loadChat();
+
+
+        // --- GAMES LOGIC ---
+        let currentGameI = null;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gameGrid = document.getElementById('gameGrid');
+        const scoreEl = document.getElementById('game-score');
+        const mobileControls = document.getElementById('mobile-controls');
+
+        function resetGameUI() {
+            document.getElementById('game-placeholder').classList.add('hidden');
+            document.getElementById('active-game-area').classList.remove('hidden');
+            document.getElementById('active-game-area').classList.add('flex');
+            canvas.classList.add('hidden');
+            gameGrid.classList.add('hidden');
+            mobileControls.classList.add('hidden');
+            clearInterval(gameInterval);
+        }
+
+        function loadGame(game) {
+            resetGameUI();
+            if (game === 'snake') initSnake();
+            if (game === 'memory') initMemory();
+            if (game === 'mines') initMines();
+            if (game === 'clicker') initClicker(); // Simplified reaction game
+        }
+
+        function closeGame() {
+            clearInterval(gameInterval);
+            document.getElementById('active-game-area').classList.add('hidden');
+            document.getElementById('active-game-area').classList.remove('flex');
+            document.getElementById('game-placeholder').classList.remove('hidden');
+        }
+
+        function handleInput(dir) {
+            if (currentGameI && currentGameI.input) currentGameI.input(dir);
+        }
+
+        let gameInterval;
+
+        // --- GAME: SNAKE ---
+        function initSnake() {
+            canvas.classList.remove('hidden');
+            mobileControls.classList.remove('grid'); // Use 'grid' class to show controls
+            mobileControls.classList.add('grid');
+            mobileControls.classList.remove('hidden');
+
+            const gridSize = 15;
+            const tileCount = 20; // 300px / 15
+            let px = 10, py = 10;
+            let gs = 15; // tile size
+            let tc = 20; // tile count
+            let ax = 15, ay = 15;
+            let xv = 0, yv = 0;
+            let trail = [];
+            let tail = 5;
+            let score = 0;
+
+            currentGameI = {
+                input: (dir) => {
+                    if (dir === 'left' && xv !== 1) { xv = -1; yv = 0; }
+                    if (dir === 'right' && xv !== -1) { xv = 1; yv = 0; }
+                    if (dir === 'up' && yv !== 1) { xv = 0; yv = -1; }
+                    if (dir === 'down' && yv !== -1) { xv = 0; yv = 1; }
+                }
+            };
+
+            // Keyboard support
+            document.onkeydown = (e) => {
+                if (e.keyCode === 37) currentGameI.input('left');
+                if (e.keyCode === 38) currentGameI.input('up');
+                if (e.keyCode === 39) currentGameI.input('right');
+                if (e.keyCode === 40) currentGameI.input('down');
+            };
+
+            gameInterval = setInterval(() => {
+                px += xv; py += yv;
+                if (px < 0) px = tc - 1;
+                if (px > tc - 1) px = 0;
+                if (py < 0) py = tc - 1;
+                if (py > tc - 1) py = 0;
+
+                ctx.fillStyle = "#0f172a"; // BG
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "#ef4444"; // Apple
+                ctx.fillRect(ax * gs, ay * gs, gs - 2, gs - 2);
+
+                ctx.fillStyle = "#10b981"; // Snake
+                for (let i = 0; i < trail.length; i++) {
+                    ctx.fillRect(trail[i].x * gs, trail[i].y * gs, gs - 2, gs - 2);
+                    if (trail[i].x == px && trail[i].y == py && tail > 5) {
+                        tail = 5; score = 0; // Reset
+                    }
+                }
+                trail.push({ x: px, y: py });
+                while (trail.length > tail) {
+                    trail.shift();
+                }
+
+                if (ax == px && ay == py) {
+                    tail++;
+                    score++;
+                    ax = Math.floor(Math.random() * tc);
+                    ay = Math.floor(Math.random() * tc);
+                }
+                scoreEl.innerText = "Score: " + score;
+            }, 100);
+        }
+
+        // --- GAME: MEMORY ---
+        function initMemory() {
+            gameGrid.classList.remove('hidden');
+            gameGrid.className = 'grid grid-cols-4 gap-2 w-[300px] h-[300px]';
+            gameGrid.innerHTML = '';
+
+            const emojis = ['🍔', '🍔', '🚗', '🚗', '🐶', '🐶', '🚀', '🚀', '🌵', '🌵', '🎮', '🎮', '👻', '👻', '💎', '💎'];
+            // Shuffle
+            emojis.sort(() => .5 - Math.random());
+
+            let flipped = [];
+            let matched = 0;
+            scoreEl.innerText = "Pairs: 0/8";
+
+            emojis.forEach((emoji, idx) => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-700 rounded cursor-pointer flex items-center justify-center text-2xl h-16 transition-all duration-300 transform rotate-y-180';
+                card.dataset.val = emoji;
+                card.dataset.idx = idx;
+                card.onclick = () => flipCard(card);
+                card.innerHTML = `<span class="opacity-0">${emoji}</span>`; // Hidden initially
+                gameGrid.appendChild(card);
+            });
+
+            function flipCard(card) {
+                if (flipped.length === 2 || card.classList.contains('bg-violet-600') || card.classList.contains('bg-slate-500')) return;
+
+                card.classList.remove('bg-slate-700');
+                card.classList.add('bg-violet-600');
+                card.querySelector('span').classList.remove('opacity-0');
+
+                flipped.push(card);
+
+                if (flipped.length === 2) {
+                    setTimeout(checkMatch, 800);
+                }
+            }
+
+            function checkMatch() {
+                const [c1, c2] = flipped;
+                if (c1.dataset.val === c2.dataset.val) {
+                    // Match
+                    c1.classList.remove('bg-violet-600');
+                    c1.classList.add('bg-emerald-600'); // Green
+                    c2.classList.remove('bg-violet-600');
+                    c2.classList.add('bg-emerald-600');
+                    matched++;
+                    scoreEl.innerText = `Pairs: ${matched}/8`;
+                } else {
+                    // Fail
+                    c1.classList.add('bg-slate-700');
+                    c1.classList.remove('bg-violet-600');
+                    c1.querySelector('span').classList.add('opacity-0');
+                    c2.classList.add('bg-slate-700');
+                    c2.classList.remove('bg-violet-600');
+                    c2.querySelector('span').classList.add('opacity-0');
+                }
+                flipped = [];
+            }
+        }
+
+        // --- GAME: CLICKER (Reflejos) ---
+        function initClicker() {
+            gameGrid.classList.remove('hidden');
+            gameGrid.className = 'w-[300px] h-[300px] relative bg-slate-900 border border-slate-700 rounded overflow-hidden';
+            gameGrid.innerHTML = '<div id="target" class="absolute w-8 h-8 bg-red-500 rounded-full cursor-pointer transition-all duration-75"></div>';
+
+            let score = 0;
+            const target = document.getElementById('target');
+            let timeLeft = 30;
+            scoreEl.innerText = `Score: 0 | Time: 30`;
+
+            function moveTarget() {
+                const x = Math.random() * (260); // 300 - 40
+                const y = Math.random() * (260);
+                target.style.left = x + 'px';
+                target.style.top = y + 'px';
+            }
+
+            target.onclick = () => {
+                score++;
+                scoreEl.innerText = `Score: ${score} | Time: ${timeLeft}`;
+                moveTarget();
+            };
+
+            moveTarget();
+
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                scoreEl.innerText = `Score: ${score} | Time: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(gameInterval);
+                    alert(`Game Over! Score: ${score}`);
+                    closeGame();
+                }
+            }, 1000);
+        }
+
+        // --- GAME: MINES (Buscaminas Simplificado) ---
+        function initMines() {
+            gameGrid.classList.remove('hidden');
+            gameGrid.className = 'grid grid-cols-8 gap-1 w-[300px]';
+            gameGrid.innerHTML = '';
+
+            const size = 8;
+            const bombs = 10;
+            let board = [];
+
+            // Gen Board
+            for (let i = 0; i < size * size; i++) board[i] = { val: 0, revealed: false, bomb: false };
+
+            let bombCount = 0;
+            while (bombCount < bombs) {
+                let idx = Math.floor(Math.random() * (size * size));
+                if (!board[idx].bomb) {
+                    board[idx].bomb = true;
+                    bombCount++;
+                }
+            }
+
+            // Calc Numbers
+            // (Skip complex calc for shortness, just show bombs vs clear)
+
+            scoreEl.innerText = "Evita las bombas 💣";
+
+            board.forEach((cell, idx) => {
+                const el = document.createElement('div');
+                el.className = 'w-8 h-8 bg-slate-700 flex items-center justify-center text-xs font-bold cursor-pointer hover:bg-slate-600 rounded';
+                el.onclick = () => {
+                    if (cell.bomb) {
+                        el.classList.add('bg-red-500');
+                        el.innerHTML = '💣';
+                        alert('BOOM! Perdiste.');
+                        closeGame();
+                    } else {
+                        el.classList.add('bg-slate-500');
+                        el.innerHTML = '✓';
+                        // Simple logic, no recursive reveal for now
+                    }
+                };
+                gameGrid.appendChild(el);
+            });
+        }
+    </script>
+</body>
+
+</html>

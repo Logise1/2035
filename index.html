@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
 
     <style>
         :root {
@@ -125,9 +126,15 @@
                 </div>
             </div>
             <!-- Botón Info/About -->
-            <button onclick="toggleAbout()" class="text-slate-400 hover:text-white">
-                <i class="fa-solid fa-circle-info text-xl"></i>
-            </button>
+            <div class="flex space-x-2">
+                <a href="tools.html" class="text-sky-400 hover:text-white transition-colors"
+                    title="Herramientas y Juegos">
+                    <i class="fa-solid fa-toolbox text-xl"></i>
+                </a>
+                <button onclick="toggleAbout()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-circle-info text-xl"></i>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -337,6 +344,15 @@
         }
 
         renderArticles();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registrado', reg))
+                    .catch(err => console.log('SW error', err));
+            });
+        }
     </script>
 </body>
 
