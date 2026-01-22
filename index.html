@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MADRID 2035: Manual Civil Extendido</title>
+    <meta name="description" content="Base de conocimiento y protocolos civiles para Madrid 2035.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-app: #0f172a; /* Slate 900 */
+            --bg-card: #1e293b; /* Slate 800 */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8; /* Sky 400 */
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .article-card { transition: all 0.2s ease; }
+        .article-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); border-color: var(--accent); }
+
+        /* Typography for Article Content */
+        .prose h3 { color: #38bdf8; font-weight: 700; margin-top: 1.5em; margin-bottom: 0.5em; font-size: 1.25rem; }
+        .prose h4 { color: #94a3b8; font-weight: 600; margin-top: 1.2em; margin-bottom: 0.5em; font-size: 1.1rem; }
+        .prose p { margin-bottom: 1em; line-height: 1.7; color: #cbd5e1; }
+        .prose ul, .prose ol { margin-bottom: 1em; padding-left: 1.5em; list-style-type: disc; color: #cbd5e1; }
+        .prose li { margin-bottom: 0.5em; }
+        .prose strong { color: #fff; font-weight: 600; }
+        .prose .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; margin: 1rem 0; border-radius: 0.25rem; }
+        .prose .info-box { background: rgba(56, 189, 248, 0.1); border-left: 4px solid #38bdf8; padding: 1rem; margin: 1rem 0; border-radius: 0.25rem; }
+        
+        .category-chip.active { background-color: var(--accent); color: #0f172a; border-color: var(--accent); }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- HEADER SIMPLE -->
+    <header class="bg-slate-900 border-b border-slate-800 p-4 shrink-0 z-20 shadow-md">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-book-journal-whills text-2xl text-sky-400"></i>
+                <div>
+                    <h1 class="font-bold text-lg leading-none tracking-tight">MADRID 2035</h1>
+                    <p class="text-xs text-slate-400 font-mono">MANUAL DE REFERENCIA CIVIL V2.0</p>
+                </div>
+            </div>
+            <!-- Botón Info/About -->
+            <button onclick="toggleAbout()" class="text-slate-400 hover:text-white">
+                <i class="fa-solid fa-circle-info text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- SEARCH & FILTERS -->
+    <div class="bg-slate-900/95 border-b border-slate-800 p-4 shrink-0 z-10">
+        <div class="max-w-4xl mx-auto space-y-4">
+            <!-- Search Bar -->
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500"></i>
+                <input type="text" id="search-input" placeholder="Buscar protocolos, rutas, suministros..." 
+                    class="w-full bg-slate-800 border border-slate-700 text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder-slate-500 transition-all">
+            </div>
+
+            <!-- Category Chips -->
+            <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-1" id="category-filters">
+                <button onclick="filterContent('all')" class="category-chip active whitespace-nowrap px-4 py-1.5 rounded-full border border-slate-700 text-sm font-medium transition-colors" data-cat="all">Todo</button>
+                <button onclick="filterContent('emergencia')" class="category-chip whitespace-nowrap px-4 py-1.5 rounded-full border border-slate-700 text-sm font-medium transition-colors hover:bg-slate-800" data-cat="emergencia">🚨 Emergencia</button>
+                <button onclick="filterContent('logistica')" class="category-chip whitespace-nowrap px-4 py-1.5 rounded-full border border-slate-700 text-sm font-medium transition-colors hover:bg-slate-800" data-cat="logistica">📦 Logística</button>
+                <button onclick="filterContent('geografia')" class="category-chip whitespace-nowrap px-4 py-1.5 rounded-full border border-slate-700 text-sm font-medium transition-colors hover:bg-slate-800" data-cat="geografia">🗺️ Mapas</button>
+                <button onclick="filterContent('salud')" class="category-chip whitespace-nowrap px-4 py-1.5 rounded-full border border-slate-700 text-sm font-medium transition-colors hover:bg-slate-800" data-cat="salud">🏥 Salud</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT GRID -->
+    <main class="flex-grow overflow-y-auto bg-slate-950 p-4" id="main-scroll">
+        <div class="max-w-4xl mx-auto">
+            <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
+                <!-- Artículos inyectados por JS -->
+            </div>
+            
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-12">
+                <i class="fa-solid fa-folder-open text-4xl text-slate-700 mb-4"></i>
+                <p class="text-slate-500">No se encontraron resultados.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ARTICLE READER (Modal Fullscreen) -->
+    <div id="article-reader" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col animate-fade-in">
+        <!-- Reader Header -->
+        <div class="border-b border-slate-800 bg-slate-900/95 backdrop-blur p-4 flex items-center justify-between shrink-0">
+            <button onclick="closeReader()" class="flex items-center text-slate-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Volver
+            </button>
+            <div class="flex space-x-4 text-slate-400">
+                <button onclick="adjustFontSize(1)" title="Aumentar Texto"><i class="fa-solid fa-font text-sm"></i>+</button>
+                <button onclick="adjustFontSize(-1)" title="Disminuir Texto"><i class="fa-solid fa-font text-xs"></i>-</button>
+            </div>
+        </div>
+
+        <!-- Reader Content -->
+        <div class="flex-grow overflow-y-auto p-4 md:p-8" id="reader-scroll">
+            <article class="max-w-3xl mx-auto prose prose-invert pb-24">
+                <div class="mb-8">
+                    <span id="reader-category" class="text-sky-400 text-xs font-bold uppercase tracking-wider mb-2 block">CATEGORÍA</span>
+                    <h1 id="reader-title" class="text-3xl md:text-4xl font-bold text-white leading-tight">Título del Artículo</h1>
+                </div>
+                <div id="reader-body" class="text-slate-300">
+                    <!-- Contenido -->
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <!-- ABOUT MODAL -->
+    <div id="about-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-800 rounded-xl max-w-sm w-full p-6 border border-slate-700 shadow-2xl">
+            <h2 class="text-xl font-bold text-white mb-2">Sobre esta Web</h2>
+            <p class="text-slate-300 text-sm mb-4">Esta es una herramienta de consulta offline. Toda la información está contenida en este archivo HTML. No envía datos a internet.</p>
+            <button onclick="toggleAbout()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg font-medium transition-colors">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE ARTÍCULOS ---
+        const articles = [
+            // --- EMERGENCIA Y DEFENSA ---
+            {
+                id: 'bomb_home',
+                category: 'emergencia',
+                icon: 'fa-house-crack',
+                title: 'Ataque Aéreo: Protocolo en Domicilio',
+                summary: 'Identificación de la "Hard Room" y posturas de seguridad ante ondas expansivas.',
+                content: `
+                    <h3>La Regla de Oro: Dentro vs Fuera</h3>
+                    <p>En un conflicto moderno (drones, misiles hipersónicos), las sirenas pueden sonar solo segundos antes del impacto, o no sonar. Tu tiempo de reacción es cero.</p>
+                    
+                    <h3>1. El Lugar Seguro (Hard Room)</h3>
+                    <p>Identifica YA la habitación más segura de tu casa. Debe cumplir:</p>
+                    <ul>
+                        <li><strong>Sin ventanas:</strong> La onda expansiva rompe los cristales y los convierte en metralla letal. El 80% de las heridas en bombardeos urbanos son por vidrio, no por fuego.</li>
+                        <li><strong>Paredes maestras:</strong> Pasillos centrales o baños interiores suelen ser los más robustos.</li>
+                        <li><strong>Piso intermedio:</strong> Si vives en un último piso, el techo es vulnerable a impactos directos. Si vives en un bajo, los escombros de todo el edificio pueden caer sobre ti. Los pisos intermedios (2º-3º en un edificio de 5) ofrecen la mejor protección estadística.</li>
+                    </ul>
+
+                    <h3>2. La Postura de Supervivencia</h3>
+                    <p>Si sientes una explosión o escuchas el silbido:</p>
+                    <ol>
+                        <li>Tírate al suelo <strong>inmediatamente</strong> (boca abajo).</li>
+                        <li>Manos cruzadas detrás de la nuca (protege cervicales).</li>
+                        <li>Codos pegados al suelo (para no rebotar).</li>
+                        <li>Piernas cruzadas (protege arterias femorales).</li>
+                        <li><strong>BOCA ABIERTA:</strong> Crucial. La diferencia de presión puede reventarte los tímpanos. Abrir la boca iguala la presión interna y externa.</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'nbq_nuclear',
+                category: 'emergencia',
+                icon: 'fa-radiation',
+                title: 'Amenaza Nuclear y Química (NBQ)',
+                summary: 'Refugio in-situ (Shelter-in-Place) y sellado de habitaciones ante nube tóxica.',
+                content: `
+                    <h3>Diferencia entre Nuclear y Químico</h3>
+                    <p>En Madrid, un ataque químico buscará zonas bajas (metro). Un ataque nuclear o bomba sucia genera lluvia radiactiva (fallout) que cae desde arriba.</p>
+                    
+                    <h3>Protocolo de Sellado (Shelter-in-Place)</h3>
+                    <p>Si se anuncia una nube tóxica o radiactiva y no puedes evacuar:</p>
+                    <ol>
+                        <li><strong>Cierra todo:</strong> Ventanas, puertas, tiros de chimenea y rejillas de ventilación.</li>
+                        <li><strong>Apaga la climatización:</strong> Aire acondicionado o calefacción que coja aire de fuera.</li>
+                        <li><strong>La Habitación Interior:</strong> Ve a una habitación sin ventanas. Usa cinta americana y plástico para sellar el marco de la puerta.</li>
+                        <li><strong>Radio:</strong> Escucha instrucciones. La mayoría de nubes químicas se disipan en horas. La radiación más letal decae en 48-72 horas.</li>
+                    </ol>
+
+                    <div class="warning-box">
+                        <strong>¿Vientos en Madrid?</strong> Históricamente, el viento predominante en Madrid viene del Suroeste. Si hay una detonación en el Sur (Getafe/Bases), la nube irá hacia el centro y el Corredor del Henares. Si estás en la Sierra (Noroeste), sueles estar a barlovento (más seguro).
+                    </div>
+                `
+            },
+            {
+                id: 'civil_riots',
+                category: 'emergencia',
+                icon: 'fa-users-slash',
+                title: 'Disturbios y Zonas Rojas',
+                summary: 'El concepto "Grey Man" y áreas a evitar en Madrid durante conflictos civiles.',
+                content: `
+                    <h3>El Concepto "Grey Man" (Hombre Gris)</h3>
+                    <p>En una guerra civil o colapso social, no quieres parecer un soldado ni una víctima rica. Quieres ser invisible.</p>
+                    <ul>
+                        <li><strong>Ropa:</strong> Nada de camuflaje, nada táctico, nada de marcas caras. Ropa desgastada, colores aburridos (gris, azul oscuro).</li>
+                        <li><strong>Mochila:</strong> No uses mochilas militares con sistema MOLLE. Usa una bolsa de supermercado reutilizable o una mochila escolar vieja y sucia. Sugiere que no llevas nada de valor.</li>
+                        <li><strong>Actitud:</strong> Camina a ritmo medio. Mirar al suelo pero escaneando con la vista periférica. No hagas contacto visual directo (desafío) ni huyas corriendo (presa).</li>
+                    </ul>
+
+                    <h3>Zonas Rojas en Madrid</h3>
+                    <p>Históricamente y estratégicamente, evita:</p>
+                    <ul>
+                        <li><strong>Centros de Poder:</strong> Congreso (Cortes), Palacio Real, Moncloa.</li>
+                        <li><strong>Nudos de Transporte:</strong> Atocha, Chamartín, Intercambiador de Moncloa. Serán puntos de control (checkpoints) o objetivos.</li>
+                        <li><strong>Barrios "Símbolo":</strong> Zonas muy ricas (Barrio Salamanca) o muy conflictivas pueden ser foco de saqueos. Los barrios residenciales anodinos de clase media suelen ser los más tranquilos.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 'home_defense',
+                category: 'emergencia',
+                icon: 'fa-shield-halved',
+                title: 'Defensa Pasiva del Hogar',
+                summary: 'Cómo fortificar una puerta estándar y disuasión sin armas de fuego.',
+                content: `
+                    <h3>El Principio de la Cebolla</h3>
+                    <p>La seguridad son capas. Si llegan a tu puerta, ya has fallado en las capas exteriores (disuasión).</p>
+
+                    <h3>1. Apariencia Exterior</h3>
+                    <p>Tu puerta no debe parecer la de un búnker lleno de comida. Debe parecer que ya ha sido saqueada. Deja basura en el felpudo. No limpies la puerta. Quita tu nombre del buzón.</p>
+
+                    <h3>2. Fortificación Física</h3>
+                    <ul>
+                        <li><strong>La Cerradura no importa:</strong> En un asalto violento, nadie usa ganzúas. Usan arietes o patadas. Lo que falla es el marco de madera.</li>
+                        <li><strong>Refuerzo:</strong> Atornilla una pletina de metal larga en el marco donde entra el pestillo. Usa tornillos de 10cm que lleguen al ladrillo, no solo a la madera.</li>
+                        <li><strong>Bloqueo:</strong> Una cuña de puerta de goma industrial por dentro es increíblemente efectiva. Muebles pesados empujados contra la puerta son mejores que cualquier alarma.</li>
+                    </ul>
+
+                    <h3>3. Iluminación</h3>
+                    <p>En un apagón general, una casa con luz es un objetivo. Usa cortinas opacas (blackout) o mantas pesadas en las ventanas. Si tienes luz dentro, que no se vea fuera (Disciplina de Luz).</p>
+                `
+            },
+
+            // --- LOGÍSTICA ---
+            {
+                id: 'water_prep',
+                category: 'logistica',
+                icon: 'fa-faucet-drip',
+                title: 'Gestión Crítica del Agua',
+                summary: 'Fuentes alternativas y potabilización cuando falla el Canal de Isabel II.',
+                content: `
+                    <h3>La Vulnerabilidad de Madrid</h3>
+                    <p>El agua de Madrid viene de la Sierra Norte. Requiere electricidad para ser bombeada a los depósitos elevados. Sin luz, no hay agua en cuestión de horas.</p>
+
+                    <h3>Fuentes Alternativas en tu Edificio</h3>
+                    <ul>
+                        <li><strong>Tu calentador/termo:</strong> Tiene 50-100L de agua potable dentro. Cierra la llave de paso general y vacíalo por el grifo de desagüe.</li>
+                        <li><strong>Cisternas:</strong> La cisterna del inodoro (el tanque) tiene 5-10L de agua limpia si no usas pastillas químicas.</li>
+                    </ul>
+
+                    <h3>Fuentes Exteriores y Peligros</h3>
+                    <ul>
+                        <li><strong>Fuentes Públicas:</strong> Muchas fuentes del Madrid antiguo vienen de viajes de agua subterráneos, pero no cuentes con ello.</li>
+                        <li><strong>Río Manzanares:</strong> <strong style="color:red">NO BEBER</strong> sin hervir y filtrar con carbón activo. Tiene metales pesados y químicos agrícolas que el cloro no elimina.</li>
+                    </ul>
+
+                    <h3>Potabilización de Emergencia</h3>
+                    <p>Si el agua es clara pero sospechosa:</p>
+                    <ol>
+                        <li><strong>Hervir:</strong> 1 minuto en ebullición fuerte mata bacterias y virus.</li>
+                        <li><strong>Lejía (Sin detergente ni olor):</strong> 2 gotas por litro. Dejar reposar 30 min.</li>
+                        <li><strong>Solar (SODIS):</strong> Botella de plástico transparente al sol directo 6 horas (solo mata patógenos biológicos, no químicos).</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'food_pantry',
+                category: 'logistica',
+                icon: 'fa-wheat-awn',
+                title: 'Despensa de Larga Duración',
+                summary: 'Alimentos de alta densidad calórica para escenarios sin electricidad.',
+                content: `
+                    <h3>Calorías vs Peso</h3>
+                    <p>En estrés, quemas el doble. La lechuga no sirve. Necesitas densidad.</p>
+                    
+                    <h3>Top Alimentos (Clima Seco Madrid)</h3>
+                    <ul>
+                        <li><strong>Miel:</strong> Eterna. Antiséptica. Energía pura.</li>
+                        <li><strong>Arroz blanco:</strong> Dura 10+ años. Requiere mucha agua para cocinar.</li>
+                        <li><strong>Pasta:</strong> Requiere menos agua que el arroz.</li>
+                        <li><strong>Mantequilla de cacahuete:</strong> Grasa y proteína. Sin cocinado.</li>
+                        <li><strong>Latas:</strong> Sardinas (come el pez, usa el aceite para cocinar o iluminar con una mecha).</li>
+                    </ul>
+                    
+                    <div class="info-box">
+                        <strong>Truco del Olor:</strong> Si cocinas bacon o carne en una hambruna, tus vecinos lo olerán a 50 metros. Cocina solo hervidos de noche. Guarda la grasa para ingerirla fría si es necesario.
+                    </div>
+                `
+            },
+            {
+                id: 'sanitation_waste',
+                category: 'logistica',
+                icon: 'fa-toilet',
+                title: 'Higiene de Combate y Residuos',
+                summary: 'Gestión de heces y basura cuando no funciona el alcantarillado.',
+                content: `
+                    <h3>El Asesino Silencioso</h3>
+                    <p>En asedios (Sarajevo, Alepo), la disentería y el cólera matan más que las balas. Si el váter no traga, **DEJA DE USARLO** inmediatamente o atascarás todo el edificio.</p>
+
+                    <h3>El Método del Cubo (Twin Bucket System)</h3>
+                    <p>Necesitas dos cubos de pintura o basura fuertes:</p>
+                    <ol>
+                        <li><strong>Cubo 1 (Orina):</strong> El pis es estéril al salir. Se puede tirar por un desagüe o en la tierra lejos de fuentes de agua. No mezclar con heces (la mezcla es lo que huele fatal).</li>
+                        <li><strong>Cubo 2 (Heces):</strong> Usa una bolsa de basura resistente dentro. Después de usar, cubre con ceniza, arena de gato o tierra seca. NUNCA uses agua. Tapa herméticamente.</li>
+                    </ol>
+
+                    <h3>Disposición Final</h3>
+                    <p>Cuando la bolsa de heces esté llena, ciérrala bien. Si hay servicios de recogida en puntos centrales, llévala. Si no, entiérrala a 50cm de profundidad y al menos a 100m de cualquier río o fuente.</p>
+                `
+            },
+            {
+                id: 'energy_scavenge',
+                category: 'logistica',
+                icon: 'fa-bolt',
+                title: 'Energía: Obtención y Baterías',
+                summary: 'Cómo conseguir electricidad de fuentes urbanas abandonadas.',
+                content: `
+                    <h3>El apagón será largo</h3>
+                    <p>No esperes luz en meses. Tu prioridad es cargar dispositivos de comunicación (radio, móvil offline con mapas).</p>
+
+                    <h3>Fuentes Urbanas</h3>
+                    <ul>
+                        <li><strong>Coches abandonados:</strong> Tienen baterías de plomo de 12V. Necesitas un cargador USB de mechero de coche y dos cables para conectarlo a los bornes. Puedes cargar móviles durante semanas con una sola batería de coche.</li>
+                        <li><strong>Luces de jardín solares:</strong> Esas pequeñas luces que la gente tiene en terrazas contienen una pequeña célula solar y una pila AA recargable. Son pésimas, pero pueden cargar una pila AA al día para tu radio.</li>
+                        <li><strong>Powerbanks:</strong> Si tienes uno, úsalo solo para emergencias. No lo gastes jugando. Manténlo entre 20% y 80% para alargar su vida útil.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 'barter_economy',
+                category: 'logistica',
+                icon: 'fa-handshake',
+                title: 'Economía de Trueque',
+                summary: 'Qué objetos tendrán valor infinito cuando el Euro caiga.',
+                content: `
+                    <h3>El dinero Fiat no valdrá nada</h3>
+                    <p>En 2 semanas, el papel moneda solo servirá para encender fuego. El oro es bueno para sobornar guardias para salir del país, pero malo para comprar pan (es indivisible y atrae ladrones).</p>
+
+                    <h3>Monedas de Cambio Real</h3>
+                    <ul>
+                        <li><strong>Vicios:</strong> Tabaco y Alcohol barato (vodka). La gente adicta pagará lo que sea. El alcohol también desinfecta.</li>
+                        <li><strong>Higiene femenina:</strong> Tampones y compresas. Desaparecen de las tiendas en horas. Valor incalculable.</li>
+                        <li><strong>Medicinas OTC:</strong> Ibuprofeno, Paracetamol, Antidiarréicos (Fortasec).</li>
+                        <li><strong>Mecheros y Pilas:</strong> Pequeños, baratos de almacenar y todo el mundo los necesita.</li>
+                        <li><strong>Café:</strong> Soluble. La cafeína es una droga funcional necesaria para guardias nocturnas.</li>
+                    </ul>
+                `
+            },
+
+            // --- GEOGRAFÍA ---
+            {
+                id: 'metro_network',
+                category: 'geografia',
+                icon: 'fa-train-subway',
+                title: 'Red de Metro: Refugios y Trampas',
+                summary: 'Análisis de profundidad de líneas L6 y L11 vs estaciones superficiales.',
+                content: `
+                    <h3>Profundidad es Vida</h3>
+                    <p>El Metro de Madrid no es uniforme. Líneas antiguas (L1, L2, L4) están a pocos metros de la superficie (método "cut and cover"). Líneas modernas son profundas túneles.</p>
+
+                    <h3>Estaciones Seguras (Búnkeres)</h3>
+                    <ul>
+                        <li><strong>Línea 6 (La Circular):</strong> Cuatro Caminos (45m prof.), República Argentina, Nuevos Ministerios, Sainz de Baranda.</li>
+                        <li><strong>Línea 11:</strong> La más moderna y profunda en el sur.</li>
+                        <li><strong>Guzmán el Bueno:</strong> Muy profunda y con accesos complejos que facilitan la defensa.</li>
+                    </ul>
+
+                    <h3>Trampas Mortales</h3>
+                    <ul>
+                        <li><strong>Intercambiadores (Sol, Atocha, Chamartín, Av. América):</strong> Evitar. Son objetivos de bombas y focos de pánico masivo. Una estampida humana aquí es letal.</li>
+                        <li><strong>Línea 5 (Casa de Campo):</strong> Tramo en superficie. Cero protección.</li>
+                        <li><strong>Línea 10 (Batán):</strong> Superficie.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 'escape_routes',
+                category: 'geografia',
+                icon: 'fa-mountain',
+                title: 'Rutas de Éxodo: Sierra Norte',
+                summary: 'Vías de evacuación evitando la M-30 y M-40.',
+                content: `
+                    <h3>La Ratonera M-30 / M-40</h3>
+                    <p>Olvídate del coche. Madrid será la ratonera de coches más grande de Europa. Intentar salir en coche es suicidio.</p>
+
+                    <h3>La Opción Norte (Sierra de Guadarrama)</h3>
+                    <p>Ruta natural de huida. Agua, bosques y orografía difícil para tanques.</p>
+                    <ul>
+                        <li><strong>Vías del Tren:</strong> Sigue las vías de Cercanías hacia Colmenar Viejo / Soto del Real a pie. Son planas, directas y evitan carreteras.</li>
+                        <li><strong>Carril Bici M-607:</strong> Autopista de salida excelente para bicicletas hasta Colmenar.</li>
+                        <li><strong>Cañadas Reales:</strong> Caminos de ganado protegidos que cruzan la ciudad (Cañada Real Galiana, etc.). Suelen evitar centros urbanos densos.</li>
+                    </ul>
+
+                    <h3>Peligros Geográficos</h3>
+                    <p>Evita los puentes grandes sobre el Manzanares si hay alerta de bombardeo. Cruza por el cauce (parques Madrid Río) si el río está bajo.</p>
+                `
+            },
+            {
+                id: 'water_points',
+                category: 'geografia',
+                icon: 'fa-map-location-dot',
+                title: 'Mapa de Recursos Hídricos',
+                summary: 'Puntos de agua naturales y artificiales en la Comunidad.',
+                content: `
+                    <h3>Dentro de la Ciudad</h3>
+                    <ul>
+                        <li><strong>Parque del Retiro:</strong> Tiene pozos y aljibes antiguos de mantenimiento, pero estará militarizado o saturado.</li>
+                        <li><strong>Casa de Campo:</strong> El Lago es agua estancada (no beber). Busca los arroyos (Meaques) más arriba, cerca de la tapia, aunque requieren filtrado intenso.</li>
+                    </ul>
+
+                    <h3>Fuera de la Ciudad</h3>
+                    <ul>
+                        <li><strong>Rio Lozoya (Norte):</strong> La mejor agua de Madrid. Presas de El Atazar, Riosequillo. Objetivo estratégico.</li>
+                        <li><strong>Manantiales Sierra:</strong> Fuenfría (Cercedilla), Fuente del Retén. Agua pura y fría.</li>
+                    </ul>
+                `
+            },
+
+            // --- SALUD ---
+            {
+                id: 'first_aid',
+                category: 'salud',
+                icon: 'fa-briefcase-medical',
+                title: 'Primeros Auxilios Tácticos (IFAK)',
+                summary: 'Tratamiento de hemorragias masivas y traumas de guerra.',
+                content: `
+                    <p>En 2035, las ambulancias no vendrán. Tú eres el médico.</p>
+                    <h3>Protocolo MAR (Masive bleeding, Airway, Respiration)</h3>
+                    <ol>
+                        <li><strong>Hemorragia Masiva (Mata en 3 min):</strong> Si hay sangre roja brillante a chorro, pon un <strong>Torniquete CAT</strong> alto y apretado en la extremidad. No lo quites. Duele muchísimo, es normal.</li>
+                        <li><strong>Vía Aérea:</strong> Si está inconsciente, ponlo de lado (posición lateral de seguridad) para que no se ahogue con su lengua o vómito.</li>
+                        <li><strong>Respiración:</strong> Busca heridas en el pecho. Si hay un agujero que "silba" al respirar, tápalo con un plástico pegado con cinta por 3 lados (Parche oclusivo).</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'dental_care',
+                category: 'salud',
+                icon: 'fa-tooth',
+                title: 'Odontología de Supervivencia',
+                summary: 'Cómo tratar infecciones dentales sin dentista.',
+                content: `
+                    <h3>Un dolor incapacitante</h3>
+                    <p>Un dolor de muelas te dejará fuera de combate, sin poder comer ni dormir, reduciendo tu capacidad de supervivencia a cero.</p>
+
+                    <h3>Kit Dental de Emergencia</h3>
+                    <ul>
+                        <li><strong>Aceite de Clavo (Esencia):</strong> El anestésico dental más potente de la naturaleza. Empapa un algodón y ponlo en la caries. Calma el dolor casi al instante.</li>
+                        <li><strong>Pasta de relleno temporal:</strong> Venden kits en farmacias para tapar empastes caídos. Si no tienes, cera de ortodoncia o incluso cera de vela (muy temporal) para evitar que entre aire.</li>
+                        <li><strong>Extracción:</strong> ÚLTIMO RECURSO. El riesgo de infección y hemorragia es altísimo. Solo si el diente está muy suelto.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 'psych_isolation',
+                category: 'salud',
+                icon: 'fa-brain',
+                title: 'Psicología del Asedio',
+                summary: 'Mantener la cordura en encierros prolongados.',
+                content: `
+                    <h3>El enemigo interior</h3>
+                    <p>El aburrimiento y la incertidumbre destruyen la moral. En un refugio, la depresión lleva a la inacción y la muerte.</p>
+
+                    <h3>Estrategias de Cordura</h3>
+                    <ul>
+                        <li><strong>Rutinas Estrictas:</strong> Levántate, lávate (aunque sea con un trapo húmedo), come y "trabaja" a horas fijas. El caos horario desorienta.</li>
+                        <li><strong>Roles:</strong> Asigna tareas a todos. "Tú eres el encargado del inventario", "Tú vigilas la radio". Sentirse útil es vital.</li>
+                        <li><strong>Información Controlada:</strong> No escuches la radio de noticias 24h. Solo a horas fijas. El flujo constante de malas noticias genera ansiedad paralizante.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 'corpse_management',
+                category: 'salud',
+                icon: 'fa-skull-crossbones',
+                title: 'Gestión de Fallecidos',
+                summary: 'Protocolos sanitarios duros pero necesarios.',
+                content: `
+                    <div class="warning-box">
+                        <strong>ADVERTENCIA:</strong> Contenido sensible.
+                    </div>
+                    <p>Si alguien fallece en el refugio y no se puede salir (bombardeo continuo/NBQ):</p>
+                    <ol>
+                        <li><strong>Mover el cuerpo:</strong> Sacarlo de la zona habitable inmediatamente a una habitación fría o balcón (si es seguro).</li>
+                        <li><strong>Envolver:</strong> Usar sábanas o plásticos. Tapar orificios para evitar fluidos.</li>
+                        <li><strong>Identificación:</strong> Escribir nombre/fecha en el envoltorio y dejar el DNI con el cuerpo.</li>
+                        <li><strong>No enterrar temporalmente:</strong> Si no puedes cavar profundo (1.5m), los animales lo desenterrarán. Es mejor mantenerlo aislado y frío hasta que los servicios de emergencia (si existen) o una tregua permitan el entierro.</li>
+                    </ol>
+                `
+            }
+        ];
+
+        // --- FUNCIONES DE INTERFAZ (Misma lógica, solo carga los nuevos datos) ---
+        const articlesGrid = document.getElementById('articles-grid');
+        const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        
+        let currentFilter = 'all';
+
+        function renderArticles(filterText = '') {
+            articlesGrid.innerHTML = '';
+            let count = 0;
+
+            const normalizedText = filterText.toLowerCase();
+
+            articles.forEach(article => {
+                if (currentFilter !== 'all' && article.category !== currentFilter) return;
+
+                if (normalizedText && 
+                    !article.title.toLowerCase().includes(normalizedText) && 
+                    !article.content.toLowerCase().includes(normalizedText) &&
+                    !article.summary.toLowerCase().includes(normalizedText)) {
+                    return;
+                }
+
+                count++;
+                const card = document.createElement('div');
+                card.className = 'article-card bg-slate-800 border border-slate-700 p-5 rounded-xl cursor-pointer flex flex-col justify-between h-full';
+                card.onclick = () => openReader(article);
+
+                let catColor = 'text-slate-400';
+                if(article.category === 'emergencia') catColor = 'text-pink-500';
+                if(article.category === 'logistica') catColor = 'text-amber-500';
+                if(article.category === 'geografia') catColor = 'text-sky-500';
+                if(article.category === 'salud') catColor = 'text-emerald-500';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 border border-slate-700 px-2 py-0.5 rounded bg-slate-900">${article.category}</span>
+                            <i class="fa-solid ${article.icon} ${catColor} text-lg"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 leading-snug">${article.title}</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">${article.summary}</p>
+                    </div>
+                    <div class="mt-4 flex items-center text-sky-500 text-xs font-semibold group">
+                        Leer guía completa <i class="fa-solid fa-arrow-right ml-1 transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                `;
+                articlesGrid.appendChild(card);
+            });
+
+            if (count === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        function filterContent(category) {
+            currentFilter = category;
+            document.querySelectorAll('.category-chip').forEach(btn => {
+                if (btn.dataset.cat === category) {
+                    btn.classList.add('active');
+                    btn.classList.remove('hover:bg-slate-800');
+                } else {
+                    btn.classList.remove('active');
+                    btn.classList.add('hover:bg-slate-800');
+                }
+            });
+            renderArticles(searchInput.value);
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            renderArticles(e.target.value);
+        });
+
+        function openReader(article) {
+            const reader = document.getElementById('article-reader');
+            document.getElementById('reader-title').innerText = article.title;
+            document.getElementById('reader-category').innerText = article.category;
+            document.getElementById('reader-body').innerHTML = article.content;
+            reader.classList.remove('hidden');
+            document.getElementById('reader-scroll').scrollTop = 0;
+        }
+
+        function closeReader() {
+            document.getElementById('article-reader').classList.add('hidden');
+        }
+
+        let currentFontSize = 100;
+        function adjustFontSize(dir) {
+            const body = document.getElementById('reader-body');
+            currentFontSize += (dir * 10);
+            if (currentFontSize < 80) currentFontSize = 80;
+            if (currentFontSize > 150) currentFontSize = 150;
+            body.style.fontSize = `${currentFontSize}%`;
+        }
+
+        function toggleAbout() {
+            const modal = document.getElementById('about-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        renderArticles();
+    </script>
+</body>
+</html>
