@@ -107,30 +107,48 @@
                 </div>
 
                 <!-- OFF-GRID CHAT UI -->
+                <!-- BLUETOOTH P2P CHAT -->
                 <div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-white"><i
-                                class="fa-solid fa-walkie-talkie text-green-500 mr-2"></i>Notas de Campo (Simulado)</h3>
-                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">Local Storage</span>
+                        <h3 class="font-bold text-white"><i class="fa-solid fa-bluetooth text-blue-500 mr-2"></i>Chat
+                            Bluetooth P2P</h3>
+                        <span id="bt-status" class="text-xs bg-red-600 px-2 py-1 rounded text-white">Desconectado</span>
                     </div>
                     <p class="text-xs text-slate-400 mb-3">
-                        <strong>Mensajería sin Internet:</strong> Esto simula un chat local (solo este dispositivo).
-                        Para comunicación
-                        real P2P sin datos móviles, usa apps como <strong>Briar</strong> (Bluetooth/WiFi Direct),
-                        <strong>Bridgefy</strong> (mesh Bluetooth), o <strong>Nearby Share</strong>. También puedes
-                        explorar
-                        <strong>Web Bluetooth API</strong> para crear chat P2P en navegador (experimental).
+                        <strong>Chat real sin Internet:</strong> Usa Web Bluetooth API para comunicarte directamente con
+                        dispositivos cercanos. Requiere navegadores compatibles (Chrome/Edge en Android, Chrome en PC
+                        con Bluetooth).
                     </p>
-                    <div id="chat-history"
-                        class="bg-slate-900 border border-slate-700 rounded-lg h-40 overflow-y-auto p-3 mb-3 text-sm space-y-2">
-                        <div class="text-slate-500 italic text-center text-xs mt-2">No hay registros de misión.</div>
+
+                    <!-- Connection Controls -->
+                    <div class="mb-3 flex space-x-2">
+                        <button id="bt-connect-btn" onclick="connectBluetooth()"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm font-medium">
+                            <i class="fa-solid fa-link mr-1"></i> Conectar
+                        </button>
+                        <button id="bt-disconnect-btn" onclick="disconnectBluetooth()" disabled
+                            class="flex-1 bg-slate-600 text-slate-400 px-3 py-2 rounded text-sm font-medium cursor-not-allowed">
+                            <i class="fa-solid fa-unlink mr-1"></i> Desconectar
+                        </button>
                     </div>
+
+                    <!-- Chat History -->
+                    <div id="bt-chat-history"
+                        class="bg-slate-900 border border-slate-700 rounded-lg h-40 overflow-y-auto p-3 mb-3 text-sm space-y-2">
+                        <div class="text-slate-500 italic text-center text-xs mt-2">
+                            Conecta a un dispositivo cercano para empezar a enviar mensajes.
+                        </div>
+                    </div>
+
+                    <!-- Message Input -->
                     <div class="flex space-x-2">
-                        <input type="text" id="chat-input" placeholder="Escribir nota opertativa..."
-                            class="flex-grow bg-slate-700 border-none text-white rounded px-3 py-2 text-sm focus:ring-2 focus:ring-violet-500">
-                        <button onclick="sendMsg()"
-                            class="bg-violet-600 hover:bg-violet-700 text-white px-4 rounded text-sm"><i
-                                class="fa-solid fa-paper-plane"></i></button>
+                        <input type="text" id="bt-chat-input" placeholder="Mensaje P2P..." disabled
+                            class="flex-grow bg-slate-700 border-none text-white rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+                            onkeypress="if(event.key==='Enter') sendBTMsg()">
+                        <button id="bt-send-btn" onclick="sendBTMsg()" disabled
+                            class="bg-slate-600 text-slate-400 px-4 rounded text-sm cursor-not-allowed">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
 
